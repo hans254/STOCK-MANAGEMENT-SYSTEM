@@ -1,4 +1,5 @@
 {% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,10 +11,38 @@
 </head>
 <body>
     {% include 'nav_bar.html' %}
-    {% for instance in queryset %}
-    {{ instance.item_name }}, {{ instance.quantity }} <br>
-    {% endfor %}
-
+    <main class="container">
+        <div class="bg-body-tertiary p-5 rounded">
+            <div class="header">{{ header }}</div>
+            
+            <form method="post" action="">{% csrf_token %}
+                {{form|crispy}}
+                <input type="submit" value="Search"/>
+            </form>
+            <div class="display_table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>COUNT</th>
+                            <th>CATEGORY</th>
+                            <th>ITEM NAME</th>
+                            <th>QUANTITY IN STORE</th>
+                        </tr>
+                    </thead>
+                    {% for instance in queryset %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ instance.category }}</td>
+                            <td>{{ instance.item_name }}</td>
+                            <td>{{ instance.quantity }}</td>
+                        </tr>
+    
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+      </main>
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

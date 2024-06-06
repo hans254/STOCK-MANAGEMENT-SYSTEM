@@ -11,12 +11,24 @@ def home(request):
     return render(request, "home.html", context)
 
 def list_items(request):
-    title = 'list of Items'
+    header = 'List of Items'
+    form = StockSearchForm(request.POST or None)
     queryset = stock.objects.all()
     context = {
-        'title': title,
-        'queryset': queryset
+        'header': header,
+        'queryset': queryset,
+        'form': form,
     }
+    if request.method == 'POST':
+        queryset = stock.objects.filter(category__icontains=form['category'].value(), 
+        item_name__icontains=form['item_name'].value())
+        context = {
+            "form": form,
+            "header": header,
+            "queryset": queryset
+        }
+
+
     return render(request, "list_items.html", context)
 
 def add_items(request):
