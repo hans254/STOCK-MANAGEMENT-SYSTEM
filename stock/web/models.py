@@ -1,8 +1,22 @@
 from django.db import models
 
 # Create your models here.
+category_choice = (
+    ['Furniture', 'Furniture'],
+    ['IT Equipment','IT Equipment'],
+    ['Phone','Phone'],
+    ['Electronics','Electronics']
+)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    def __str__(self):
+        return self.name
+
 class stock(models.Model):
-    category = models.CharField(max_length=50, blank=True, null=True)
+    #category = models.CharField(max_length=50, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     item_name = models.CharField(max_length=50, blank=True, null=True)
     quantity = models.IntegerField(default=0, blank=True, null=True)
     recieved_quantity = models.IntegerField(default=0, blank=True, null=True)
@@ -14,7 +28,7 @@ class stock(models.Model):
     created_by = models.CharField(max_length=50, blank=True, null=True)
     order_level = models.IntegerField(default=0, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    export_to_csv = models.BooleanField(default=False)
+    #export_to_csv = models.BooleanField(default=False)
 
     def __str__(self):
         return self.item_name + ' ' + str(self.quantity)

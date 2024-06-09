@@ -12,6 +12,13 @@
 <body>
     {% include 'nav_bar.html' %}
     <main class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <div class="bg-body-tertiary p-5 rounded">
             <div class="header">{{ header }}</div>
             
@@ -27,14 +34,16 @@
                             <th>CATEGORY</th>
                             <th>ITEM NAME</th>
                             <th>QUANTITY IN STORE</th>
+                            <th>DELETE</th>
                         </tr>
                     </thead>
                     {% for instance in queryset %}
                         <tr>
                             <td>{{forloop.counter}}</td>
                             <td>{{ instance.category }}</td>
-                            <td>{{ instance.item_name }}</td>
+                            <td><a href="{% url 'update_items' instance.id %}">{{instance.item_name}}</a></td>
                             <td>{{ instance.quantity }}</td>
+                            <td><a href="{% url 'delete_items' instance.id %}">Delete</a></td>
                         </tr>
     
                     {% endfor %}
