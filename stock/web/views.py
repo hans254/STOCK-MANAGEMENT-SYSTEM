@@ -41,7 +41,7 @@ def list_items(request):
         if category_name:
             queryset = queryset.filter(category__name__icontains=category_name)
 
-            if form['export_to_CSV']. Value()== True:
+            if form['export_to_CSV'].value()== True:
                 response = HttpResponse(content_type='text/csv')
                 response['Content-Disposition'] = 'attachment; filename="List of stock.csv"'
                 writer = csv.writer(response)
