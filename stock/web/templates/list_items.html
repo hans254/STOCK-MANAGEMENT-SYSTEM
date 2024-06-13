@@ -26,6 +26,7 @@
                 {{form|crispy}}
                 <input type="submit" value="Search"/>
             </form>
+            <br>
             <div class="display_table">
                 <table class="table">
                     <thead>
@@ -34,15 +35,30 @@
                             <th>CATEGORY</th>
                             <th>ITEM NAME</th>
                             <th>QUANTITY IN STORE</th>
+                            <th>REORDER_LEVEL</th>
+                            <th>TIMESTAMP</th>
+                            <th>LAST UPDATED</th>
                             <th>DELETE</th>
                         </tr>
                     </thead>
                     {% for instance in queryset %}
                         <tr>
+                            
                             <td>{{forloop.counter}}</td>
                             <td>{{ instance.category }}</td>
-                            <td><a href="{% url 'update_items' instance.id %}">{{instance.item_name}}</a></td>
-                            <td>{{ instance.quantity }}</td>
+                            <td><a href="{% url 'update_items' instance.id %}" class="item_name">{{instance.item_name}}</a></td>
+                            <td>
+                                {% if instance.quantity <= instance.reorder_level %}
+                                <div style="background-color: orange;">
+                                    <a href="{% url 'stock_detail' instance.id %}">{{ instance.quantity }}</a>
+                                </div>
+                                {% else %}
+                                    <a href="{% url 'stock_detail' instance.id %}">{{ instance.quantity }}</a>
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'reorder_level' instance.id %}">{{ instance.reorder_level }}</a></td>
+                            <td>{{ instance.timestamp }}</td>
+                            <td>{{ instance.last_updated }}</td>
                             <td><a href="{% url 'delete_items' instance.id %}">Delete</a></td>
                         </tr>
     

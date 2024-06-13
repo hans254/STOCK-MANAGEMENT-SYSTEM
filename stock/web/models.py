@@ -26,8 +26,10 @@ class stock(models.Model):
     issue_to = models.CharField(max_length=50, blank=True, null=True)
     phone_number = models.CharField(max_length=50, blank=True, null=True)
     created_by = models.CharField(max_length=50, blank=True, null=True)
-    order_level = models.IntegerField(default=0, blank=True, null=True)
+    reorder_level = models.IntegerField(default=0, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+    date = models.DateField(auto_now_add=False, blank=True, null=True)
     #export_to_csv = models.BooleanField(default=False)
 
     def __str__(self):

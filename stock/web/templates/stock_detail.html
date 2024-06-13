@@ -1,0 +1,52 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    {% include 'nav_bar.html' %}
+    <main class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="bg-body-tertiary p-5 rounded">
+            <div class="header">{{ header }}</div>
+            
+            <br>
+            <a href="{% url 'issue_items' queryset.id %}"><div class="btn btn-danger">ISSUE THIS ITEM</div></a>
+            <a href="{% url 'receive_items' queryset.id %}"><div class="btn btn-primary">RECIEVE THIS ITEM</div></a>
+            <br><br>
+            <div class="display_table">
+                <table class="table">
+                    <tr>
+                        <th>ITEM NAME</th>
+                        <th>QUANTITY IN STORE</th>
+                        <th>LAST UPDATED</th>
+                        <th>REORDER LEVEL</th>
+                    </tr>
+                    <tr>
+                        <td>{{ queryset.item_name }}</td>
+                        <td>{{ queryset.quantity }}</td>
+                        <td>{{ queryset.last_updated }}</td>
+                        <td>{{ queryset.reorder_level }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+      </main>
+    
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
