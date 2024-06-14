@@ -38,7 +38,8 @@ def list_items(request):
 
     if request.method == 'POST' and form.is_valid():
         category_name = form.cleaned_data.get('category')
-        if category_name:
+        item_name = form.cleaned_data.get('item_name')
+        if category_name and item_name:
             queryset = queryset.filter(category__name__icontains=category_name)
 
             if form['export_to_CSV'].value()== True:

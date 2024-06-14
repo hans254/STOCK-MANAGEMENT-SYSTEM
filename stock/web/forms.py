@@ -31,8 +31,9 @@ class StockCreateForm(forms.ModelForm):
             
 
 class ItemFilterForm(forms.Form):
-    export_to_CSV = forms.BooleanField(required=False)
     category = forms.CharField(required=False, label='Category')
+    item_name = forms.CharField(required=False, label='Item_name')
+    export_to_CSV = forms.BooleanField(required=False)
     class Meta:
         model = stock
         fields = ['category','item_name']

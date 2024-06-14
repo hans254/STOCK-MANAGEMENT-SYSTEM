@@ -24,7 +24,8 @@
             
             <form method="post" action="">{% csrf_token %}
                 {{form|crispy}}
-                <input type="submit" value="Search"/>
+                <br>
+                <input class="btn btn-primary" type="submit" value="Search"/>
             </form>
             <br>
             <div class="display_table">
