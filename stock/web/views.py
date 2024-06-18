@@ -11,7 +11,8 @@ def home(request):
     context = {
         'title': title,
     }
-    return render(request, "home.html", context)
+    return redirect('/list_items.html')
+    #return render(request, "home.html", context)
 
 '''
 def list_items(request):
@@ -33,6 +34,7 @@ def list_items(request):
         }
 '''
 def list_items(request):
+    header = 'List of Items'
     form = ItemFilterForm(request.POST or None)
     queryset = stock.objects.all()
 
@@ -69,7 +71,7 @@ def add_items(request):
         return redirect(list_items)
     context = {
         'form': form,
-        'title': 'add_item'
+        'title': 'Add Item'
     }
     return render(request, "add_items.html", context)
 
@@ -159,10 +161,37 @@ def reorder_level(request, pk):
     return render(request, 'add_items.html', context)
 
 def list_history(request):
-    header = 'LIST OF ITEMS'
+    header = 'HISTORY DATA'
     queryset = StockHistory.objects.all()
+    form = StockHistorySearchForm(request.POST or None)
     context = {
         'header': header,
         'queryset': queryset,
+        'form': form,
     }
+    
+    if request.method == 'POST':
+        category = form['category'].value()
+        queryset = StockHistory.objects.filter(
+    item_name__icontains=form['item_name'].value(), 
+    last_updated__range=(form['start_date'].value(), form['end_date'].value())
+)
+
+        if (category != ''):
+            queryset = queryset.filter(category_id = category)
+            if form['export_to_CSV'].value() == True:
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename="Stock History.csv"'
+                writer = csv.writer(response)
+                writer.writerow(['CATEGORY', 'ITEM NAME', 'QUANTITY', 'ISSUE QUANTITY', 'RECIEVE QUANTITY', 'RECIEVE BY', 'ISSUE BY', 'LAST UPDATED'])
+                instance = queryset
+                for stock in instance:
+                    writer.writerow([stock.category, stock.item_name, stock.quantity, stock.issue_quantity, stock.recieved_quantity, stock.receive_by, stock.issue_by, stock.last_updated])
+                    return response
+            context = {
+                'form': form,
+                'header': header,
+                'queryset': queryset,
+            }
     return render(request, 'list_history.html', context)
+
