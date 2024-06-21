@@ -4,15 +4,21 @@ from .models import *
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = stock
-        fields = ['category', 'item_name', 'quantity', 'date']
+        fields = ['category', 'item_name', 'quantity']
 
-    def clean_category(self):
+    '''def clean_category(self):
         category = self.cleaned_data.get('category')
         for instance in stock.objects.all():
             if instance.category == category:
                 raise forms.ValidationError(f"{category} is already created")
         return category
+'''
 
+    def clean_category(self):
+        category = self.cleaned_data.get('category')
+        if Category.objects.filter(name=category.name).exists():
+            raise forms.ValidationError(str(category) + ' is already created')
+        return category
     def clean_category(self):
         category = self.cleaned_data.get('category')
         if not category:

@@ -12,17 +12,16 @@
     <link rel="stylesheet" href="{% static 'js/jquery.ui-1.13.3/jquery-ui.min.css' %}">
     <link rel="stylesheet" href="{% static 'js/jquery.ui-1.13.3/jquery-ui.structure.min.css' %}">
     <link rel="stylesheet" href="{% static 'js/jquery.ui-1.13.3/jquery-ui.theme.min.css' %}">
-
-    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui-1.13.3/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'js/myjs.js' %}"></script>
-
+ 
     <!----Bootstrap core CSS----->
-    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/nprogress/nprogress.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+    
 </head>
 <body>
     {% include 'nav_bar.html' %}
+    {% include 'theme.html' %}
     <main class="container">
         {% if messages %}
         <ul class="messages">
@@ -39,7 +38,7 @@
                     <form action="" method="POST">
                         {% csrf_token %}
                         {{ form|crispy }}
-                        <input type="submit" class="btn btn-primary" value="Search"/>
+                        <input type="submit" class="btn btn-primary mybutton" value="Search"/>
                     </form>
                 </div>
                 <br>
@@ -84,5 +83,11 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui-1.13.3/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/nprogress/nprogress.js' %}"></script>
+    <script src="{% static 'js/myjs.js' %}"></script>
+    <script src="{% static 'js/pager/paging.js' %}"></script>
+    
 </body>
 </html>

@@ -1,5 +1,4 @@
-"""
-URL configuration for stock project.
+'''URL configuration for stock project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -13,7 +12,7 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+'''
 from django.contrib import admin
 from django.urls import path, include
 from web import views
@@ -24,7 +23,7 @@ urlpatterns = [
     path('', views.home, name='list_items'),
     path('list_items', views.list_items, name='list_items'),
     path('add_items', views.add_items, name='add_items'),
-    path('update_items/<str:pk>/', views.update_items, name="update_items"),
+    path('update_items/<int:pk>/', views.update_items, name="update_items"),
     path('delete_items/<str:pk>/', views.delete_items, name='delete_items'),
     path('stock_detail/<str:pk>/', views.stock_detail, name='stock_detail'),
     path('issue_items/<str:pk>/', views.issue_items, name='issue_items'),

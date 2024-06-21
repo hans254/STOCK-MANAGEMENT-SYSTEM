@@ -4,6 +4,7 @@ from .forms import *
 from django.http import HttpResponse
 import csv
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Create your views here.
 def home(request):
@@ -36,7 +37,13 @@ def list_items(request):
 def list_items(request):
     header = 'List of Items'
     form = ItemFilterForm(request.POST or None)
-    queryset = stock.objects.all()
+    queryset = stock.objects.all().order_by('id')
+    category_name = request.GET.get('category_name')
+    if category_name:
+        queryset = queryset.filter(category__name__icontains=category_name)
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page')
+    queryset = paginator.get_page(page_number)
 
     if request.method == 'POST' and form.is_valid():
         category_name = form.cleaned_data.get('category')
@@ -109,11 +116,22 @@ def issue_items(request, pk):
     form = IssueForm(request.POST or None, instance = queryset)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.recieved_quantity = 0
+        #instance.recieved_quantity = 0
         instance.quantity -= instance.issue_quantity
         instance.issue_by = str(request.user)
         messages.success(request, 'Issued SUCCESSFULLY.' + str(instance.quantity) + ' ' + str(instance.item_name) + 's now left in store')
         instance.save()
+        issue_history = StockHistory(
+            id = instance.id,
+            last_updated = instance.last_updated,
+            category_id = instance.category_id,
+            item_name = instance.item_name,
+            quantity = instance.quantity,
+            issue_to = instance.issue_to,
+            issue_by = instance.issue_by,
+            issue_quantity = instance.issue_quantity
+        )
+        issue_history.save()
         return redirect('/stock_detail/' + str(instance.id))
 
     context = {
@@ -129,10 +147,20 @@ def receive_items(request, pk):
     form = RecieveForm(request.POST or None, instance = queryset)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.issue_quantity = 0
+        #instance.issue_quantity = 0
         instance.quantity += instance.recieved_quantity
         instance.recieve_by = str(request.user)
         instance.save()
+        receive_history = StockHistory(
+            id = instance.id,
+            last_updated = instance.last_updated,
+            category_id = instance.category_id,
+            item_name = instance.item_name,
+            quantity = instance.quantity,
+            recieved_quantity = instance.recieved_quantity,
+            receive_by = instance.receive_by
+        )
+        receive_history.save()
         messages.success(request, 'Recieved SUCCESSFULLY. ' + str(instance.quantity) + ' ' + str(instance.item_name))
 
         return redirect('/stock_detail/' + str(instance.id))
