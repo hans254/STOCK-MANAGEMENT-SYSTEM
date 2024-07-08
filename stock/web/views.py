@@ -116,7 +116,7 @@ def issue_items(request, pk):
     form = IssueForm(request.POST or None, instance = queryset)
     if form.is_valid():
         instance = form.save(commit=False)
-        #instance.recieved_quantity = 0
+        #instance.received_quantity = 0
         instance.quantity -= instance.issue_quantity
         instance.issue_by = str(request.user)
         messages.success(request, 'Issued SUCCESSFULLY.' + str(instance.quantity) + ' ' + str(instance.item_name) + 's now left in store')
@@ -148,7 +148,7 @@ def receive_items(request, pk):
     if form.is_valid():
         instance = form.save(commit=False)
         #instance.issue_quantity = 0
-        instance.quantity += instance.recieved_quantity
+        instance.quantity += instance.received_quantity
         instance.recieve_by = str(request.user)
         instance.save()
         receive_history = StockHistory(
@@ -157,7 +157,7 @@ def receive_items(request, pk):
             category_id = instance.category_id,
             item_name = instance.item_name,
             quantity = instance.quantity,
-            recieved_quantity = instance.recieved_quantity,
+            received_quantity = instance.received_quantity,
             receive_by = instance.receive_by
         )
         receive_history.save()
@@ -214,7 +214,7 @@ def list_history(request):
                 writer.writerow(['CATEGORY', 'ITEM NAME', 'QUANTITY', 'ISSUE QUANTITY', 'RECIEVE QUANTITY', 'RECIEVE BY', 'ISSUE BY', 'LAST UPDATED'])
                 instance = queryset
                 for stock in instance:
-                    writer.writerow([stock.category, stock.item_name, stock.quantity, stock.issue_quantity, stock.recieved_quantity, stock.receive_by, stock.issue_by, stock.last_updated])
+                    writer.writerow([stock.category, stock.item_name, stock.quantity, stock.issue_quantity, stock.received_quantity, stock.receive_by, stock.issue_by, stock.last_updated])
                     return response
             context = {
                 'form': form,
@@ -222,4 +222,3 @@ def list_history(request):
                 'queryset': queryset,
             }
     return render(request, 'list_history.html', context)
-
