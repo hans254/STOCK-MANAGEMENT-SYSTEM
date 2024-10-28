@@ -41,25 +41,28 @@ def list_items(request):
     category_name = request.GET.get('category_name')
     if category_name:
         queryset = queryset.filter(category__name__icontains=category_name)
-    paginator = Paginator(queryset, 10)
+    paginator = Paginator(queryset, 2)
     page_number = request.GET.get('page')
     queryset = paginator.get_page(page_number)
 
     if request.method == 'POST' and form.is_valid():
         category_name = form.cleaned_data.get('category')
         item_name = form.cleaned_data.get('item_name')
-        if category_name and item_name:
-            queryset = queryset.filter(category__name__icontains=category_name)
+        '''if category_name and item_name:
+            queryset = queryset.filter(category__name__icontains=category_name)'''
+    if request.method == 'POST':
+        queryset = stock.objects.filter(category__icontains= form['category'].value(),
+        item_name__icontains=form['item_name'].value())
 
-            if form['export_to_CSV'].value()== True:
-                response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename="List of stock.csv"'
-                writer = csv.writer(response)
-                writer.writerow(['CATEGORY','ITEM_NAME','QUANTITY'])
-                isinstance =queryset
-                for Stock in isinstance:
-                    writer.writerow([Stock.category, Stock.item_name, Stock.quantity])
-                    return response
+        if form['export_to_CSV'].value()== True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="List of stock.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['CATEGORY','ITEM_NAME','QUANTITY'])
+            isinstance =queryset
+            for Stock in isinstance:
+                writer.writerow([Stock.category, Stock.item_name, Stock.quantity])
+                return response
 
 
     context = {
