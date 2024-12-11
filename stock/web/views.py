@@ -41,7 +41,7 @@ def list_items(request):
     category_name = request.GET.get('category_name')
     if category_name:
         queryset = queryset.filter(category__name__icontains=category_name)
-    paginator = Paginator(queryset, 2)
+    paginator = Paginator(queryset, 5)
     page_number = request.GET.get('page')
     queryset = paginator.get_page(page_number)
 
@@ -75,10 +75,12 @@ def list_items(request):
 
 def add_items(request):
     form = StockCreateForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Successfully Saved')
-        return redirect(list_items)
+    if request.method == 'POST':
+        form = StockCreateForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Successfully Saved')
+            return redirect(list_items)
     context = {
         'form': form,
         'title': 'Add Item'
@@ -195,6 +197,9 @@ def list_history(request):
     header = 'HISTORY DATA'
     queryset = StockHistory.objects.all()
     form = StockHistorySearchForm(request.POST or None)
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    queryset = paginator.get_page(page_number)
     context = {
         'header': header,
         'queryset': queryset,

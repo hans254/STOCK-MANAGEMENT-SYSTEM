@@ -42,7 +42,7 @@
                     </form>
                 </div>
                 <br>
-                <div class="col-sm-10">
+                <div class="col-sm-9">
                     <div class="display_table">
                         <table class="table">
                             <thead>
@@ -74,6 +74,18 @@
                             </tr>
                             {% endfor %}
                         </table>
+                        {% if queryset.has_previous %}
+                            <a href="?page=1">&laquo First</a>
+                            <a href="?page={{ queryset.previous_page_number }}">Previous</a>
+
+                        {% endif %}
+
+                        Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}
+
+                        {% if queryset.has_next %}
+                            <a href="?page={{ queryset.next_page_number }}">next</a>
+                            <a href="?page={{ queryset.paginator.num_pages }}">last &raquo</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
