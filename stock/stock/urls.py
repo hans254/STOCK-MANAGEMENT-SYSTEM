@@ -20,6 +20,7 @@ from web import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
     path('', views.list_items, name='list_items'),
     path('list_items', views.list_items, name='list_items'),
     path('add_items', views.add_items, name='add_items'),
@@ -31,4 +32,5 @@ urlpatterns = [
     path('reorder_level/<str:pk>/', views.reorder_level, name='reorder_level'),
     path('accounts/', include('registration.backends.default.urls')),
     path('list_history/', views.list_history, name='list_history'),
+    #path('confirm_logout/', views.confirm_logout, name='confirm_logout'),
 ]

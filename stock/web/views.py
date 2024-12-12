@@ -5,6 +5,7 @@ from django.http import HttpResponse
 import csv
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
@@ -34,6 +35,7 @@ def list_items(request):
             "queryset": queryset
         }
 '''
+@login_required
 def list_items(request):
     header = 'List of Items'
     form = ItemFilterForm(request.POST or None)
@@ -41,7 +43,7 @@ def list_items(request):
     category_name = request.GET.get('category_name')
     if category_name:
         queryset = queryset.filter(category__name__icontains=category_name)
-    paginator = Paginator(queryset, 5)
+    paginator = Paginator(queryset, 8)
     page_number = request.GET.get('page')
     queryset = paginator.get_page(page_number)
 
@@ -70,9 +72,9 @@ def list_items(request):
         'queryset': queryset,
     }
 
-    return render(request, 'list_items.html', context)
+    return render(request, 'web/list_items.html', context)
 
-
+@login_required
 def add_items(request):
     form = StockCreateForm(request.POST or None)
     if request.method == 'POST':
@@ -85,8 +87,9 @@ def add_items(request):
         'form': form,
         'title': 'Add Item'
     }
-    return render(request, "add_items.html", context)
+    return render(request, "web/add_items.html", context)
 
+@login_required
 def update_items(request, pk):
     queryset = stock.objects.get(id=pk)
     form = StockUpdateForm(instance=queryset)
@@ -99,23 +102,35 @@ def update_items(request, pk):
     context = {
         'form': form
     }
-    return render(request, 'add_items.html', context)
+    return render(request, 'web/add_items.html', context)
 
+@login_required
 def delete_items(request, pk):
     queryset = stock.objects.get(id=pk)
     if request.method == 'POST':
         queryset.delete()
         messages.success(request, 'Deleted Successfully')
         return redirect('/list_items')
-    return render(request, 'delete_items.html')
+    return render(request, 'web/delete_items.html')
 
+'''@login_required
+def confirm_logout(request):
+    #queryset = stock.objects.get(id=pk)
+    if request.method == 'POST':
+        #queryset.delete()
+        messages.success(request, 'Logout Successfull')
+        return redirect('/login')
+    return render(request, 'web/confirm_logout.html')
+'''
+@login_required
 def stock_detail(request, pk):
     queryset = stock.objects.get(id=pk)
     context = {
         'queryset': queryset,
     }
-    return render(request, 'stock_detail.html', context)
+    return render(request, 'web/stock_detail.html', context)
 
+@login_required
 def issue_items(request, pk):
     queryset = stock.objects.get(id=pk)
     form = IssueForm(request.POST or None, instance = queryset)
@@ -145,8 +160,9 @@ def issue_items(request, pk):
         'form': form,
         'username': 'Issue By: ' + str(request.user),
     }
-    return render(request, 'add_items.html', context)
+    return render(request, 'web/add_items.html', context)
 
+@login_required
 def receive_items(request, pk):
     queryset =stock.objects.get(id=pk)
     form = RecieveForm(request.POST or None, instance = queryset)
@@ -176,8 +192,9 @@ def receive_items(request, pk):
         'username': 'Recieve By: ' + str(request.user),
     }
 
-    return render(request, 'add_items.html', context)
+    return render(request, 'web/add_items.html', context)
 
+@login_required
 def reorder_level(request, pk):
     queryset = stock.objects.get(id=pk)
     form = ReorderLevelForm(request.POST or None, instance=queryset)
@@ -191,8 +208,9 @@ def reorder_level(request, pk):
         'instance': queryset,
         'form': form,
     }
-    return render(request, 'add_items.html', context)
+    return render(request, 'web/add_items.html', context)
 
+@login_required
 def list_history(request):
     header = 'HISTORY DATA'
     queryset = StockHistory.objects.all()
@@ -229,4 +247,4 @@ def list_history(request):
                 'header': header,
                 'queryset': queryset,
             }
-    return render(request, 'list_history.html', context)
+    return render(request, 'web/list_history.html', context)
