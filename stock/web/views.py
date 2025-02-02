@@ -39,40 +39,45 @@ def list_items(request):
 def list_items(request):
     header = 'List of Items'
     form = ItemFilterForm(request.POST or None)
+    
+    # Start with an empty queryset
     queryset = stock.objects.all().order_by('id')
-    category_name = request.GET.get('category_name')
-    if category_name:
-        queryset = queryset.filter(category__name__icontains=category_name)
+
+    # If the form is valid and the user has provided input, filter the queryset
+    if request.method == 'POST' and form.is_valid():
+        category_name = form.cleaned_data.get('category')
+        item_name = form.cleaned_data.get('item_name')
+
+        # Apply filtering based on form input (category and item name)
+        if category_name:
+            queryset = queryset.filter(category__name__icontains=category_name)
+        if item_name:
+            queryset = queryset.filter(item_name__icontains=item_name)
+
+        # CSV Export Logic
+        if form.cleaned_data.get('export_to_CSV', False):
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="List_of_Stock.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['CATEGORY', 'ITEM_NAME', 'QUANTITY'])
+            
+            for item in queryset:
+                writer.writerow([item.category.name, item.item_name, item.quantity])
+            return response
+
+    # Handle pagination
     paginator = Paginator(queryset, 8)
     page_number = request.GET.get('page')
     queryset = paginator.get_page(page_number)
 
-    if request.method == 'POST' and form.is_valid():
-        category_name = form.cleaned_data.get('category')
-        item_name = form.cleaned_data.get('item_name')
-        '''if category_name and item_name:
-            queryset = queryset.filter(category__name__icontains=category_name)'''
-    if request.method == 'POST':
-        queryset = stock.objects.filter(category__icontains= form['category'].value(),
-        item_name__icontains=form['item_name'].value())
-
-        if form['export_to_CSV'].value()== True:
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="List of stock.csv"'
-            writer = csv.writer(response)
-            writer.writerow(['CATEGORY','ITEM_NAME','QUANTITY'])
-            isinstance =queryset
-            for Stock in isinstance:
-                writer.writerow([Stock.category, Stock.item_name, Stock.quantity])
-                return response
-
-
     context = {
         'form': form,
         'queryset': queryset,
+        'header': header,
     }
 
     return render(request, 'web/list_items.html', context)
+
 
 @login_required
 def add_items(request):
