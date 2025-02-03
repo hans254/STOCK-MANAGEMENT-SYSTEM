@@ -6,14 +6,6 @@ class StockCreateForm(forms.ModelForm):
         model = stock
         fields = ['category', 'item_name', 'quantity']
 
-    '''def clean_category(self):
-        category = self.cleaned_data.get('category')
-        for instance in stock.objects.all():
-            if instance.category == category:
-                raise forms.ValidationError(f"{category} is already created")
-        return category
-'''
-
     def clean_category(self):
         category = self.cleaned_data.get('category')
         if Category.objects.filter(name=category.name).exists():
@@ -37,12 +29,11 @@ class StockCreateForm(forms.ModelForm):
             
 
 class ItemFilterForm(forms.Form):
-    category = forms.CharField(required=False, label='Category')
-    item_name = forms.CharField(required=False, label='Item_name')
     export_to_CSV = forms.BooleanField(required=False)
+
     class Meta:
         model = stock
-        fields = ['category','item_name']
+        fields = ['category', 'item_name']
 
 class StockUpdateForm(forms.ModelForm):
     class Meta:
@@ -72,8 +63,6 @@ class StockSearchForm(forms.ModelForm):
 
 class StockHistorySearchForm(forms.ModelForm):
     export_to_CSV = forms.BooleanField(required=False)
-    start_date = forms.DateTimeField(required=False)
-    end_date = forms.DateTimeField(required=False)
     class Meta:
         model = StockHistory
-        fields = ['category','item_name','start_date','end_date']
+        fields = ['category','item_name']
