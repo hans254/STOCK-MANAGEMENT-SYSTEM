@@ -30,7 +30,7 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <div class="bg-body-tertiary p-5 rounded">
+        <div class="bg-body-tertiary p-5 mt-2 rounded">
             <div class="header">{{ header }}</div>
             
             <div class="row">
@@ -52,6 +52,7 @@
                                     <th>CATEGORY</th>
                                     <th>ITEM_NAME</th>
                                     <th>QUANTITY IN STORE</th>
+                                    <th>ISSUE TO</th>
                                     <th>ISSUE QUANTITY</th>
                                     <th>RECIEVE QUANTITY</th>
                                     <th>RECIEVE BY</th>
@@ -66,6 +67,7 @@
                                 <td>{{ instance.category }}</td>
                                 <td>{{ instance.item_name }}</td>
                                 <td>{{ instance.quantity }}</td>
+                                <td>{{ instance.issue_to }}</td>
                                 <td>{{ instance.issue_quantity }}</td>
                                 <td>{{ instance.received_quantity }}</td>
                                 <td>{{ instance.receive_by }}</td>

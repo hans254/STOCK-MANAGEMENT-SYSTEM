@@ -29,18 +29,19 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             messages.success(request, 'Logged in successfully!')
-            return redirect('list_items')  # Replace 'home' with your homepage URL name
+            return redirect('list_items')
         else:
-            messages.error(request, 'Invalid credentials.')
+            messages.error(request, 'Wrong Username or Password. Please try again.')
 
     return render(request, 'accounts/login.html')
+
 
 
 def logout_view(request):

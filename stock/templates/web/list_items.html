@@ -48,6 +48,7 @@
                                     
                                     <th>CATEGORY</th>
                                     <th>ITEM NAME</th>
+                                    <th>PRICE</th>
                                     <th>QUANTITY IN STORE</th>
                                     <th>REORDER_LEVEL</th>
                                     
@@ -61,6 +62,7 @@
                                     
                                     <td>{{ instance.category }}</td>
                                     <td><a href="{% url 'update_items' instance.pk %}" class="item_name">{{instance.item_name}}</a></td>
+                                    <td><a href="{% url 'update_items' instance.pk %}" class="item_name">{{instance.price}}</a></td>
                                     <td>
                                         {% if instance.quantity <= instance.reorder_level %}
                                         <div style="background-color: orange;">

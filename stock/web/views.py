@@ -20,7 +20,7 @@ def home(request):
 
 def list_items(request):
     header = 'List of Items'
-    queryset = stock.objects.all().order_by('id')  # Fetch all items
+    queryset = stock.objects.all().order_by('-last_updated')
     form = StockSearchForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
@@ -198,22 +198,18 @@ def reorder_level(request, pk):
 
 def list_history(request):
     header = 'HISTORY DATA'
-    queryset = StockHistory.objects.all()
+    queryset = StockHistory.objects.all().order_by('-last_updated')
     form = StockHistorySearchForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
         category = form.cleaned_data.get('category')
         item_name = form.cleaned_data.get('item_name')
-        start_date = form.cleaned_data.get('start_date')
-        end_date = form.cleaned_data.get('end_date')
 
         # Apply the filters
         if category:
             queryset = queryset.filter(category_id=category)
         if item_name:
             queryset = queryset.filter(item_name__icontains=item_name)
-        if start_date and end_date:
-            queryset = queryset.filter(last_updated__range=(start_date, end_date))
 
         # Handle CSV export
         if form.cleaned_data.get('export_to_CSV', False):
