@@ -40,12 +40,13 @@ class StockUpdateForm(forms.ModelForm):
 class IssueForm(forms.ModelForm):
     class Meta:
         model = stock
-        fields = ['issue_quantity', 'issue_to', 'price']
+        fields = ['category','item_name','issue_quantity', 'issue_to', 'price']
+
 
 class RecieveForm(forms.ModelForm):
     class Meta:
         model = stock
-        fields = ['received_quantity', 'receive_by']
+        fields = ['category','item_name','receive_from','received_quantity', 'receive_by', 'price']
 
 class ReorderLevelForm(forms.ModelForm):
     class Meta:

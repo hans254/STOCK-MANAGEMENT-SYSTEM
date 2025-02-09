@@ -32,5 +32,7 @@ urlpatterns = [
     path('reorder_level/<str:pk>/', views.reorder_level, name='reorder_level'),
     path('accounts/', include('registration.backends.default.urls')),
     path('list_history/', views.list_history, name='list_history'),
+    path('issued_items/', views.issued_items, name='issued_items'),
+    path('recieved_items/', views.recieved_items, name='recieved_items'),
     #path('confirm_logout/', views.confirm_logout, name='confirm_logout'),
 ]

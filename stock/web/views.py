@@ -9,15 +9,6 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-def home(request):
-    title = 'Welcome: This is the Home Page'
-    context = {
-        'title': title,
-    }
-    return redirect('/list_items.html')
-    #return render(request, "home.html", context)
-
-
 def list_items(request):
     header = 'List of Items'
     queryset = stock.objects.all().order_by('-last_updated')
@@ -57,7 +48,83 @@ def list_items(request):
 
     return render(request, 'web/list_items.html', context)
 
+def issued_items(request):
+    header = 'Issued Items'
+    queryset = stock.objects.all().order_by('-last_updated')
+    form = StockSearchForm(request.POST or None)
 
+    if request.method == 'POST' and form.is_valid():
+        category = form.cleaned_data.get('category')
+        item_name = form.cleaned_data.get('item_name')
+
+        if category:
+            queryset = queryset.filter(category=category) 
+
+        if item_name:
+            queryset = queryset.filter(item_name__icontains=item_name)
+
+        # CSV Export Logic
+        if form.cleaned_data.get('export_to_CSV', False):
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="List_of_Stock.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['CATEGORY', 'ITEM_NAME', 'QUANTITY'])
+
+            for item in queryset:
+                writer.writerow([item.category.name, item.item_name, item.quantity])
+            return response
+
+    # Pagination
+    paginator = Paginator(queryset, 6)
+    page_number = request.GET.get('page')
+    queryset = paginator.get_page(page_number)
+
+    context = {
+        'form': form,
+        'queryset': queryset,
+        'header': header,
+    }
+
+    return render(request, 'web/issued_items.html', context)
+
+def recieved_items(request):
+    header = 'Recieved Items'
+    queryset = stock.objects.all().order_by('-last_updated')
+    form = StockSearchForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        category = form.cleaned_data.get('category')
+        item_name = form.cleaned_data.get('item_name')
+
+        if category:
+            queryset = queryset.filter(category=category) 
+
+        if item_name:
+            queryset = queryset.filter(item_name__icontains=item_name)
+
+        # CSV Export Logic
+        if form.cleaned_data.get('export_to_CSV', False):
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="List_of_Stock.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['CATEGORY', 'ITEM_NAME', 'QUANTITY'])
+
+            for item in queryset:
+                writer.writerow([item.category.name, item.item_name, item.quantity])
+            return response
+
+    # Pagination
+    paginator = Paginator(queryset, 6)
+    page_number = request.GET.get('page')
+    queryset = paginator.get_page(page_number)
+
+    context = {
+        'form': form,
+        'queryset': queryset,
+        'header': header,
+    }
+
+    return render(request, 'web/recieved_items.html', context)
 
 @login_required
 def add_items(request):
@@ -89,6 +156,8 @@ def update_items(request, pk):
         'form': form
     }
     return render(request, 'web/add_items.html', context)
+
+
 
 @login_required
 def delete_items(request, pk):

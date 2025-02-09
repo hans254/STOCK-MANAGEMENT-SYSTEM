@@ -24,6 +24,7 @@ class stock(models.Model):
     total_amount = models.IntegerField(default=0, blank=True, null=True)
     received_quantity = models.IntegerField(default=0, blank=True, null=True)
     receive_by = models.CharField(max_length=50, blank=True, null=True)
+    receive_from = models.CharField(max_length=50, blank=True, null=True)
     issue_quantity = models.IntegerField(default=0, blank=True, null=True)
     issue_by = models.CharField(max_length=50, blank=True, null=True)
     issue_to = models.CharField(max_length=50, blank=True, null=True)

@@ -27,7 +27,9 @@
             <br>
             <a href="{% url 'issue_items' queryset.id %}"><div class="btn btn-danger">ISSUE THIS ITEM</div></a>
             <a href="{% url 'receive_items' queryset.id %}"><div class="btn btn-primary">RECIEVE THIS ITEM</div></a>
-            <a href="/list_history"><div class="btn btn-primary">LIST HISTORY</div></a><br>
+            <a href="/list_history"><div class="btn btn-primary">LIST HISTORY</div></a>
+            <a href="/issued_items"><div class="btn btn-primary">ISSUED ITEMS</div></a>
+            <a href="/recieved_items"><div class="btn btn-primary">RECEIVED ITEMS</div><br>
             <br>
             <div class="display_table">
                 <table class="table">

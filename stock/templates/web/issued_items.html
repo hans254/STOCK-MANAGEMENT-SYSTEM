@@ -47,35 +47,24 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    
                                     <th>CATEGORY</th>
                                     <th>ITEM NAME</th>
+                                    <th>CUSTOMER'S NAME</th>
+                                    <th>SERVED BY</th>
                                     <th>PRICE</th>
-                                    <th>QUANTITY IN STORE</th>
-                                    <th>REORDER_LEVEL</th>
-                                    
-                                    <th>LAST UPDATED</th>
+                                    <th>ISSUED QUANTITY</th>
+                                    <th>TIME ISSUED</th>
                                     <th>DELETE</th>
                                 </tr>
                             </thead>
                             {% for instance in queryset.object_list %}
                                 <tr>
-                                    
-                                    
                                     <td>{{ instance.category }}</td>
                                     <td class="item_name">{{instance.item_name}}</td>
+                                    <td class="item_name">{{instance.issue_to}}</td>
+                                    <td class="item_name">{{instance.issue_by}}</td>
                                     <td class="item_name">{{instance.price}}</td>
-                                    <td>
-                                        {% if instance.quantity <= instance.reorder_level %}
-                                        <div style="background-color: orange;">
-                                            <a href="{% url 'stock_detail' instance.id %}">{{ instance.quantity }}</a>
-                                        </div>
-                                        {% else %}
-                                            <a href="{% url 'stock_detail' instance.id %}">{{ instance.quantity }}</a>
-                                        {% endif %}
-                                    </td>
-                                    <td><a href="{% url 'reorder_level' instance.id %}">{{ instance.reorder_level }}</a></td>
-                                    
+                                    <td class="item_name">{{ instance.issue_quantity }}</td>
                                     <td>{{ instance.last_updated }}</td>
                                     <td><a href="{% url 'delete_items' instance.id %}"><i class='bx bxs-trash'></i></a></td>
                                 </tr>
