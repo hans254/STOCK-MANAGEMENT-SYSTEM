@@ -36,7 +36,7 @@ def list_items(request):
             return response
 
     # Pagination
-    paginator = Paginator(queryset, 8)
+    paginator = Paginator(queryset, 7)
     page_number = request.GET.get('page')
     queryset = paginator.get_page(page_number)
 

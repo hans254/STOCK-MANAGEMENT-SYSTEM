@@ -63,7 +63,7 @@
                                     
                                     
                                     <td>{{ instance.category }}</td>
-                                    <td class="item_name">{{instance.item_name}}</td>
+                                    <td class="item_name"> <a href="{% url 'update_items' instance.id %}">{{instance.item_name}}</a></td>
                                     <td class="item_name">{{instance.price}}</td>
                                     <td>
                                         {% if instance.quantity <= instance.reorder_level %}
