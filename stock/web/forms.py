@@ -30,7 +30,7 @@ class ItemFilterForm(forms.Form):
 
     class Meta:
         model = stock
-        fields = ['category', 'item_name']
+        fields = ['category', 'item_name', 'issue_by']
 
 class StockUpdateForm(forms.ModelForm):
     class Meta:

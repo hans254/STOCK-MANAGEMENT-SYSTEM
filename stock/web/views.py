@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def list_items(request):
     header = 'List of Items'
     queryset = stock.objects.all().order_by('-last_updated')
@@ -48,6 +49,7 @@ def list_items(request):
 
     return render(request, 'web/list_items.html', context)
 
+@login_required
 def issued_items(request):
     header = 'Issued Items'
     queryset = stock.objects.all().order_by('-last_updated')
@@ -56,12 +58,16 @@ def issued_items(request):
     if request.method == 'POST' and form.is_valid():
         category = form.cleaned_data.get('category')
         item_name = form.cleaned_data.get('item_name')
+        issue_by = form.cleaned_data.get('issue_by')
 
         if category:
             queryset = queryset.filter(category=category) 
 
         if item_name:
             queryset = queryset.filter(item_name__icontains=item_name)
+
+        if issue_by:
+            queryset = queryset.filter(item_name__icontains=issue_by)
 
         # CSV Export Logic
         if form.cleaned_data.get('export_to_CSV', False):
@@ -87,6 +93,7 @@ def issued_items(request):
 
     return render(request, 'web/issued_items.html', context)
 
+@login_required
 def recieved_items(request):
     header = 'Recieved Items'
     queryset = stock.objects.all().order_by('-last_updated')
@@ -264,7 +271,7 @@ def reorder_level(request, pk):
         'form': form,
     }
     return render(request, 'web/add_items.html', context)
-
+@login_required
 def list_history(request):
     header = 'HISTORY DATA'
     queryset = StockHistory.objects.all().order_by('-last_updated')

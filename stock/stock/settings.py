@@ -141,4 +141,5 @@ ACCOUNT_ACTIVATION_DAYS = 7 # ONE-WEEK ACTIVATION WINDOW
 REGISTRATION_AUTO_LOGIN = True #Automatically log the user in
 SITE_ID = 1
 LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/list_items/'
 
